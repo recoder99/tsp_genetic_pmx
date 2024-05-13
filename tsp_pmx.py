@@ -1,10 +1,48 @@
+import random
 import math
+import itertools
 
-# mp = {{0, 10, 15, 20},
-#      {10, 0, 35, 25},
-#      {15, 35, 0, 30},
-#      {20, 25, 30, 0}
-#     }
+points = {
+    'A': (8, 6),
+    'B': (-4, 11),
+    'C': (4, 11),
+    'D': (2, 7),
+    'E': (2, 5),
+    'F': (8, 3),
+    'G': (5, 2),
+    'H': (3, 6),
+    'I': (4, 3),
+    'J': (8, 4)
+}
+
+# calculate distance between 2 points 
+def distance(point1, point2):
+    return math.sqrt((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)
+
+# calculate total distance of route
+def total_distance(route):
+    total = 0
+    for i in range(len(route) - 1):
+        if route[i] in points and route[i+1] in points:
+            total += distance(points[route[i]], points[route[i+1]])
+        else:
+            raise ValueError("Invalid route key found.")
+    return total
+
+def generate_initial_population():
+    nodes = list(points.keys())
+    permutations = itertools.permutations(nodes)
+    population = [list(p) for p in permutations ]
+    return population
+
+population = generate_initial_population()
+
+
+route_index = 200 
+selected_route = population[route_index]
+
+print("Selected Route:", selected_route)
+print("Total Distance of Selected Route:", total_distance(selected_route))
 
 def swap(arr1, arr2, start, end):
     for i in range(start, end + 1):
