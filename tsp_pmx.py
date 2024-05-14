@@ -82,27 +82,39 @@ def crossover(p1, p2, start, end):
     print("\n")
 
 def mutation(array):
+    mutation = []
+    mutation.append(array)
     for idx in enumerate(array):
         x = random.randrange(idx[0], len(array))
         array[idx[0]], array[x] = array[x], array[idx[0]]
-        print(array)
+        mutation.append(array)
+    return mutation
 
 def get_fitness(array):
     fitness = 0
     for i in range(len(array)-1):
         fitness += distance(points[array[i]], points[array[i+1]])
     return fitness
- 
+
+def TSP(start, gene_list):
+
+    parent1 = []
+    parent1.append(points[start])
+    
+
+
+gene_list = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
 array1 = [2, 1, 3, 5, 4]
 array2 = [2, 3 ,4, 1, 5]
 
 testGene = ['A', 'B', 'C', 'D']
+testGene2 = ['A', 'D', 'C', 'B']
  
 # start = int(input("Enter the starting index: "))
 # end = int(input("Enter the ending index: "))
  
-crossover(array1, array2, 2, 3)
-mutation(array1)
-mutation(array2)
+crossover(testGene, testGene2, 2, 3)
+mutation(testGene)
+mutation(testGene2)
 
 print(get_fitness(testGene))
