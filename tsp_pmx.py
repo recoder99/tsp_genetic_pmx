@@ -72,10 +72,6 @@ def crossover(p1, p2, start, end):
             if (c2[j] == c2[i]) and (i != j):
                 index2.append(i)
 
-    print(c1)
-    print(c2)
-    print("\n")
-
     index2.reverse()
     #crossing
     for i in range(len(index1)):
@@ -83,7 +79,13 @@ def crossover(p1, p2, start, end):
 
     print(c1)
     print(c2)
+    print("\n")
 
+def mutation(array):
+    for idx in enumerate(array):
+        x = random.randrange(idx[0], len(array))
+        array[idx[0]], array[x] = array[x], array[idx[0]]
+        print(array)
  
 array1 = [2, 1, 3, 5, 4]
 array2 = [2, 3 ,4, 1, 5]
@@ -92,5 +94,6 @@ array2 = [2, 3 ,4, 1, 5]
 # end = int(input("Enter the ending index: "))
  
 crossover(array1, array2, 2, 3)
- 
+mutation(array1)
+mutation(array2)
 
