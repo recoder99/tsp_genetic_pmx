@@ -43,9 +43,11 @@ def generate_initial_population(population_size):
     return population
 
 
-route_index = 200 
+route_index = 5
+population = generate_initial_population(10)
 selected_route = population[route_index]
 
+print(population)
 print("Selected Route:", selected_route)
 print("Total Distance of Selected Route:", total_distance(selected_route))
 
