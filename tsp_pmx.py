@@ -29,13 +29,18 @@ def total_distance(route):
             raise ValueError("Invalid route key found.")
     return total
 
-def generate_initial_population():
-    nodes = list(points.keys())
-    permutations = itertools.permutations(nodes)
-    population = [list(p) for p in permutations ]
-    return population
+def generate_initial_population(population_size):
+    population = []
 
-population = generate_initial_population()
+    while len(population) < population_size:
+        route = list(points.keys())
+        random.shuffle(route)
+        
+        #check if route already in population
+        if route not in population:
+            population.append(route)
+
+    return population
 
 
 route_index = 200 
