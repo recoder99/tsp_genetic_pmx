@@ -86,9 +86,17 @@ def mutation(array):
         x = random.randrange(idx[0], len(array))
         array[idx[0]], array[x] = array[x], array[idx[0]]
         print(array)
+
+def get_fitness(array):
+    fitness = 0
+    for i in range(len(array)-1):
+        fitness += distance(points[array[i]], points[array[i+1]])
+    return fitness
  
 array1 = [2, 1, 3, 5, 4]
 array2 = [2, 3 ,4, 1, 5]
+
+testGene = ['A', 'B', 'C', 'D']
  
 # start = int(input("Enter the starting index: "))
 # end = int(input("Enter the ending index: "))
@@ -97,3 +105,4 @@ crossover(array1, array2, 2, 3)
 mutation(array1)
 mutation(array2)
 
+print(get_fitness(testGene))
