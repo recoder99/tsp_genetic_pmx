@@ -48,41 +48,49 @@ def swap(arr1, arr2, start, end):
     for i in range(start, end + 1):
         arr1[i], arr2[i] = arr2[i], arr1[i]
 
-def crossover(p1, p2):
+def crossover(p1, p2, start, end):
     c1 = p1
     c2 = p2
 
-    swap(c1, c2, 1,2)
+    swap(c1, c2, start,end)
 
     index1 = []
     index2 = []
+                
 
     for i in range(len(c1)):
+        if i in range(start, end+1):
+            continue
         for j in range(len(c1)):
-            if (c1[j] == c1[i]) and (i != j) and ():
-                index1.append(j)
+            if (c1[j] == c1[i]) and (i != j):
+                index1.append(i)
 
     for i in range(len(c2)):
+        if i in range(start, end+1):
+            continue
         for j in range(len(c2)):
             if (c2[j] == c2[i]) and (i != j):
-                index2.append(j)
+                index2.append(i)
 
-    index2 = index2.reverse()
+    print(c1)
+    print(c2)
+    print("\n")
+
+    index2.reverse()
     #crossing
     for i in range(len(index1)):
-        c1[index1[i]], c2[index1[i]] = c2[index1[i]], c1[index1[i]]
-
+        c1[index1[i]], c2[index2[i]] = c2[index2[i]], c1[index1[i]]
 
     print(c1)
     print(c2)
 
  
-array1 = [2, 3, 5, 1]
-array2 = [5, 4 ,2, 1]
+array1 = [2, 1, 3, 5, 4]
+array2 = [2, 3 ,4, 1, 5]
  
 # start = int(input("Enter the starting index: "))
 # end = int(input("Enter the ending index: "))
  
-crossover(array1, array2)
+crossover(array1, array2, 2, 3)
  
 
