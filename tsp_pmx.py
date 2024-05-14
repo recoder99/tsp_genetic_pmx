@@ -107,30 +107,34 @@ def TSP(start, itr):
 
     parent1 = math.inf
     parent2 = math.inf
+    fitness = []
+    population = []
+
+
+    population = generate_initial_population(2)
+    for i in population:
+        i.remove(start)
+        i.insert(0, start)
+        i.append(start)
+    #get fitness of each population
+    
+    for i in range(len(population)):
+        heapq.heappush(fitness, (get_fitness(population[i]), i))
+
+    temp = heapq.heappop(fitness)
+    parent1 = (temp[0], population[temp[1]])
 
     for m in range(itr):
 
-        population = generate_initial_population(10)
-        fitness = []
-        if len(fitness) <= 0:
-            for i in population:
-                i.remove(start)
-                i.insert(0, start)
-                i.append(start)
-            #get fitness of each population
-            
-            for i in range(len(population)):
-                heapq.heappush(fitness, (get_fitness(population[i]), i))
-
-        temp = heapq.heappop(fitness)
-        parent1 = (temp[0], population[temp[1]])
-
         while(True):
             #if len(fitness) > 0:
-            temp = heapq.heappop(fitness)
-            parent2 = (temp[0], population[temp[1]])
+            temp = generate_initial_population(1)[0]
+            temp.remove(start)
+            temp.insert(0, start)
+            temp.append(start)
 
-
+            parent2 = (get_fitness(temp), temp)
+            
             childs = crossover(parent1[1][1:len(parent1[1]) - 1], parent2[1][1:len(parent2[1]) -1], 2,6)
 
             mutations = mutation(childs[0]) + mutation(childs[1])
@@ -138,7 +142,7 @@ def TSP(start, itr):
             
             temp_child = (math.inf, 0)
 
-            while (temp_child[0] >= parent1[0] - 2)  and (temp_child[0] >= parent2[0] - 2):
+            while (temp_child[0] >= parent1[0]-2) or (temp_child[0] >= parent2[0]-2):
                 if len(mutations) <= 0:
                     break
 
@@ -150,6 +154,7 @@ def TSP(start, itr):
                 temp_child = (get_fitness(temp), temp)
             
             if len(mutations) <= 0:
+                print(f"Gen #{m} current lowest path:{parent1[0]} ")
                 break
             else:
                 print(f"Gen #{m} current lowest path:{temp_child[0]} ")
