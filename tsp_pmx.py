@@ -1,5 +1,6 @@
 import random
 import math
+import heapq
 import itertools
 
 points = {
@@ -47,7 +48,6 @@ route_index = 5
 population = generate_initial_population(10)
 selected_route = population[route_index]
 
-print(population)
 print("Selected Route:", selected_route)
 print("Total Distance of Selected Route:", total_distance(selected_route))
 
@@ -84,8 +84,7 @@ def crossover(p1, p2, start, end):
     for i in range(len(index1)):
         c1[index1[i]], c2[index2[i]] = c2[index2[i]], c1[index1[i]]
 
-    print(c1)
-    print(c2)
+    return (c1,c2)
     print("\n")
 
 def mutation(array):
@@ -103,10 +102,70 @@ def get_fitness(array):
         fitness += distance(points[array[i]], points[array[i+1]])
     return fitness
 
-def TSP(start, gene_list):
 
-    parent1 = []
-    parent1.append(points[start])
+def TSP(start, itr):
+
+    parent1 = math.inf
+    parent2 = math.inf
+
+    for m in range(itr):
+
+        population = generate_initial_population(10)
+        fitness = []
+        if len(fitness) <= 0:
+            for i in population:
+                i.remove(start)
+                i.insert(0, start)
+                i.append(start)
+            #get fitness of each population
+            
+            for i in range(len(population)):
+                heapq.heappush(fitness, (get_fitness(population[i]), i))
+
+        temp = heapq.heappop(fitness)
+        parent1 = (temp[0], population[temp[1]])
+
+        while(True):
+            #if len(fitness) > 0:
+            temp = heapq.heappop(fitness)
+            parent2 = (temp[0], population[temp[1]])
+
+
+            childs = crossover(parent1[1][1:len(parent1[1]) - 1], parent2[1][1:len(parent2[1]) -1], 2,6)
+
+            mutations = mutation(childs[0]) + mutation(childs[1])
+            random.shuffle(mutations)
+            
+            temp_child = (math.inf, 0)
+
+            while (temp_child[0] >= parent1[0] - 2)  and (temp_child[0] >= parent2[0] - 2):
+                if len(mutations) <= 0:
+                    break
+
+                temp = mutations.pop()
+                #apply start and end position
+                temp.insert(0, start)
+                temp.append(start)
+
+                temp_child = (get_fitness(temp), temp)
+            
+            if len(mutations) <= 0:
+                break
+            else:
+                print(f"Gen #{m} current lowest path:{temp_child[0]} ")
+                parent1 = temp_child
+                break
+
+    
+
+
+        
+
+    
+
+
+
+
     
 
 
@@ -120,8 +179,10 @@ testGene2 = ['A', 'D', 'C', 'B']
 # start = int(input("Enter the starting index: "))
 # end = int(input("Enter the ending index: "))
  
-crossover(testGene, testGene2, 2, 3)
-mutation(testGene)
-mutation(testGene2)
+# crossover(testGene, testGene2, 2, 3)
+# mutation(testGene)
+# mutation(testGene2)
 
-print(get_fitness(testGene))
+# print(get_fitness(testGene))
+
+TSP('A', 5000)
