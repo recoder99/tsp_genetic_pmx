@@ -1,6 +1,7 @@
 import random
 import math
 import heapq
+import time
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
@@ -9,13 +10,24 @@ points = {
     'B': (-4, 11),
     'C': (4, 11),
     'D': (2, 7),
-    'E': (2, 5),
+    'E': (-2, 5),
     'F': (8, 3),
-    'G': (5, 8),
+    'G': (-5, -8),
     'H': (3, 6),
-    'I': (4, 3),
+    'I': (4, -3),
     'J': (8, 4)
 }
+
+def time_travel(func):
+    def wrapper(*args, **kwargs):
+        t1 = time.time()
+        result = func(*args, **kwargs)
+        t2 = time.time() - t1
+        print(f'Traversal time: {t2}')
+        # return t2
+        return result
+
+    return wrapper
 
 
 # calculate distance between 2 points
@@ -109,19 +121,28 @@ def get_fitness(array):
     return fitness
 
 
-def graph(set, points):
+def graph(set, points, fitness):
 
-    fig, ax = plt.subplots(figsize=(12, 12))
+    fig, ax = plt.subplots()
 
-    line, = ax.plot([], [], lw=1)
+    line, = ax.plot([], [], lw=2)
+    generation_text = ax.text(0.01, 0.98, '', ha='left', va='top', transform=ax.transAxes, fontsize=8)
+    fitness_text = ax.text(0.01, 0.95, '', ha='left', va='top', transform=ax.transAxes, fontsize=8)
 
     def init():
+        plt.xlabel("x")
+        plt.ylabel("y")
+
+        plt.plot(ax.get_xlim(), [0, 0], 'k--')
+        plt.plot([0, 0], ax.get_ylim(), 'k--')
+
+        plt.xlim(-13, 13), plt.ylim(-13, 13)
 
         x = [points[i][0] for i in set[0]]
         y = [points[i][1] for i in set[0]]
         plt.plot(x, y, 'co')
 
-        for i in range(len(x)):
+        for i in range(len(x) - 1):
             plt.annotate(f"{i}", (x[i], y[i]), xytext=(x[i] + 0.1, y[i] + 0.1), fontsize=10)
 
         line.set_data([], [])
@@ -130,24 +151,27 @@ def graph(set, points):
     def animate(frame):
         x = [points[i][0] for i in set[frame] + [set[frame][0]]]
         y = [points[i][1] for i in set[frame] + [set[frame][0]]]
-        plt.plot(x, y, 'ro-')
+
+        generation_text.set_text(f"Generation: {frame}")
+        fitness_text.set_text(f"Fitness: {fitness[frame]}")
 
         line.set_data(x, y)
 
         return line
 
-    anim = FuncAnimation(fig, animate, frames=range(0, len(set), len(set) // 100),
-                        init_func=init, interval=3, repeat=False)
+    anim = FuncAnimation(fig, animate, frames=range(0, len(set), 20),
+                        init_func=init, interval=1, repeat=False)
 
     plt.show()
 
-
+@time_travel
 def TSP(start, itr):
     parent1 = math.inf
     parent2 = math.inf
     fitness = []
     population = []
     all_generations = []
+    all_fitness = []
 
     population = generate_initial_population(2)
     for i in population:
@@ -192,17 +216,18 @@ def TSP(start, itr):
                 temp_child = (get_fitness(temp), temp)
 
             if len(mutations) <= 0:
-                # print(f"Gen #{m} current lowest path:{parent1[0]} ")
-                # all_generations.append(parent1[1])
-                # break
-                pass
+                print(f"Gen #{m} current lowest path:{parent1[0]} ")
+                all_generations.append(parent1[1])
+                all_fitness.append(round(parent1[0], 3))
+                break
             else:
                 print(f"Gen #{m} current lowest path:{temp_child[0]} ")
                 all_generations.append(temp_child[1])
+                all_fitness.append(round(temp_child[0], 3))
                 parent1 = temp_child
                 break
 
-    return all_generations
+    return all_generations, all_fitness
 
 
 gene_list = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
@@ -222,5 +247,5 @@ testGene2 = ['A', 'D', 'C', 'B']
 # print(get_fitness(testGene))
 
 #test
-ag = TSP('A', 5000)
-graph(ag, points)
+ag, af = TSP('A', 10000)
+graph(ag, points, af)
