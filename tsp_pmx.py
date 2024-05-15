@@ -221,5 +221,6 @@ testGene2 = ['A', 'D', 'C', 'B']
 
 # print(get_fitness(testGene))
 
+#test
 ag = TSP('A', 5000)
 graph(ag, points)
