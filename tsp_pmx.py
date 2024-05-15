@@ -204,7 +204,7 @@ def TSP(start, itr):
 
             temp_child = (math.inf, 0)
 
-            while (temp_child[0] >= parent1[0] + 2) or (temp_child[0] >= parent2[0] + 2):
+            while (temp_child[0] >= parent1[0] + 0.5) or (temp_child[0] >= parent2[0] + 0.5):
                 if len(mutations) <= 0:
                     break
 
