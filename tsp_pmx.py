@@ -7,13 +7,13 @@ from matplotlib.animation import FuncAnimation
 points = {
     'A': (8, 6),
     'B': (-4, 11),
-    'C': (4, -11),
+    'C': (4, 11),
     'D': (2, 7),
     'E': (2, 5),
-    'F': (-8, 3),
-    'G': (5, -8),
+    'F': (8, 3),
+    'G': (5, 8),
     'H': (3, 6),
-    'I': (-4, -3),
+    'I': (4, 3),
     'J': (8, 4)
 }
 
@@ -180,7 +180,7 @@ def TSP(start, itr):
 
             temp_child = (math.inf, 0)
 
-            while (temp_child[0] >= parent1[0] - 2) or (temp_child[0] >= parent2[0] - 2):
+            while (temp_child[0] >= parent1[0] + 2) or (temp_child[0] >= parent2[0] + 2):
                 if len(mutations) <= 0:
                     break
 
@@ -192,9 +192,10 @@ def TSP(start, itr):
                 temp_child = (get_fitness(temp), temp)
 
             if len(mutations) <= 0:
-                print(f"Gen #{m} current lowest path:{parent1[0]} ")
-                all_generations.append(parent1[1])
-                break
+                # print(f"Gen #{m} current lowest path:{parent1[0]} ")
+                # all_generations.append(parent1[1])
+                # break
+                pass
             else:
                 print(f"Gen #{m} current lowest path:{temp_child[0]} ")
                 all_generations.append(temp_child[1])
