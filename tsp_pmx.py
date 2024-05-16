@@ -279,6 +279,67 @@ def TSP(start, itr, point_set):
 
     return all_generations, all_fitness
 
+def TSP_2(start, itr, point_set):
+    parent1 = math.inf
+    parent2 = math.inf
+    fitness = []
+    population = []
+    all_generations = []
+    all_fitness = []
+
+    population = generate_initial_population(2, point_set)
+    for i in population:
+        i.remove(start)
+        i.insert(0, start)
+        i.append(start)
+
+    # get fitness of each population
+    for i in range(len(population)):
+        heapq.heappush(fitness, (get_fitness(population[i], point_set), i))
+
+    temp = heapq.heappop(fitness)
+    parent1 = (temp[0], population[temp[1]])
+
+    for m in range(itr):
+
+        while True:
+            # if len(fitness) > 0:
+            temp = generate_initial_population(1, point_set)[0]
+            temp.remove(start)
+            temp.insert(0, start)
+            temp.append(start)
+
+            parent2 = (get_fitness(temp, point_set), temp)
+
+            childs = crossover(parent1[1][1:len(parent1[1]) - 1], parent2[1][1:len(parent2[1]) - 1], 2, 6)
+
+            mutations = mutation(childs[0]) + mutation(childs[1])
+            random.shuffle(mutations)
+
+            temp_child = (math.inf, 0)
+
+            while (temp_child[0] >= parent1[0]) or (temp_child[0] >= parent2[0]):
+                if len(mutations) <= 0:
+                    break
+
+                temp = mutations.pop()
+                # apply start and end position
+                temp.insert(0, start)
+                temp.append(start)
+
+                temp_child = (get_fitness(temp, point_set), temp)
+
+            if len(mutations) <= 0:
+                pass
+            else:
+                print(f"Gen #{m} current lowest path:{temp_child[0]} ")
+                all_generations.append(temp_child[1])
+                all_fitness.append(round(temp_child[0], 3))
+                parent1 = temp_child
+                break
+
+    return all_generations, all_fitness
+
 
 gene_list = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
 array1 = [2, 1, 3, 5, 4]
@@ -297,6 +358,6 @@ testGene2 = ['A', 'D', 'C', 'B']
 # print(get_fitness(testGene))
 
 # test
-ag, af = TSP('A', 5001, points2)
+ag, af = TSP_2('A', 5001, points2)
 animate_generation(ag, points2, af)
 graph_generations(af)
