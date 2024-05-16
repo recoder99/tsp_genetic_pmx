@@ -31,6 +31,30 @@ points2 = {
     'J': (11, 4)
 }
 
+points3 = {
+'A': (2, 4),
+    'B': (6, 5),
+    'C': (10, 5),
+    'D': (7, 8),
+    'E': (4, 7),
+    'F': (7, 4),
+    'G': (11, 6),
+    'H': (10, 8),
+    'I': (9, 3),
+    'J': (11, 4),
+    'K': (5, 1),
+    'L': (3, 2),
+    'M': (1, 7),
+    'N': (8, 9),
+    'O': (12, 3),
+    'P': (14, 6),
+    'Q': (9, 10),
+    'R': (6, 1),
+    'S': (4, 3),
+    'T': (13, 5)
+}
+
+
 def time_travel(func):
     def wrapper(*args, **kwargs):
         t1 = time.time()
@@ -134,7 +158,7 @@ def get_fitness(array, point_set):
     return fitness
 
 
-def graph(set, points, fitness):
+def animate_generation(set, points, fitness):
 
     fig, ax = plt.subplots()
 
@@ -143,6 +167,8 @@ def graph(set, points, fitness):
     fitness_text = ax.text(0.01, 0.95, '', ha='left', va='top', transform=ax.transAxes, fontsize=8)
 
     def init():
+        plt.title('TSP Solution Timeline')
+
         plt.xlabel("x")
         plt.ylabel("y")
 
@@ -155,8 +181,9 @@ def graph(set, points, fitness):
         y = [points[i][1] for i in set[0]]
         plt.plot(x, y, 'co')
 
-        for i in range(len(x) - 1):
-            plt.annotate(f"{i}", (x[i], y[i]), xytext=(x[i] + 0.1, y[i] + 0.1), fontsize=10)
+        for i in range(len(set[0]) - 1):
+            plt.annotate(f"{set[0][i]}", (x[i], y[i]), xytext=(x[i] + 0.1, y[i] + 0.1), fontsize=10)
+            # plt.annotate(f"{i}", (x[i], y[i]), xytext=(x[i] + 0.1, y[i] + 0.1), fontsize=10)
 
         line.set_data([], [])
         return line,
@@ -173,9 +200,19 @@ def graph(set, points, fitness):
         return line
 
     anim = FuncAnimation(fig, animate, frames=range(0, len(set), 20),
-                        init_func=init, interval=1, repeat=False)
+                         init_func=init, interval=1, repeat=False)
 
     plt.show()
+
+
+def graph_generations(fitness):
+    plt.title('Generation Timeline')
+
+    plt.plot([i for i in range(len(fitness))], fitness)
+    plt.ylabel('Fitness')
+    plt.xlabel('Generation')
+    plt.show()
+
 
 @time_travel
 def TSP(start, itr, point_set):
@@ -217,7 +254,7 @@ def TSP(start, itr, point_set):
 
             temp_child = (math.inf, 0)
 
-            while (temp_child[0] >= parent1[0] + 0.05) or (temp_child[0] >= parent2[0] + 0.05):
+            while (temp_child[0] >= parent1[0]) or (temp_child[0] >= parent2[0]):
                 if len(mutations) <= 0:
                     break
 
@@ -259,6 +296,7 @@ testGene2 = ['A', 'D', 'C', 'B']
 
 # print(get_fitness(testGene))
 
-#test
-ag, af = TSP('A', 5000, points2)
-graph(ag, points2, af)
+# test
+ag, af = TSP('A', 5001, points2)
+animate_generation(ag, points2, af)
+graph_generations(af)
