@@ -6,16 +6,29 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
 points = {
-    'A': (8, 6),
+    'A': (-8, 6),
     'B': (-4, 11),
     'C': (4, 11),
-    'D': (2, 7),
+    'D': (-2, 7),
     'E': (2, 5),
     'F': (8, 3),
-    'G': (5, 8),
-    'H': (3, 6),
-    'I': (4, 3),
-    'J': (8, 4)
+    'G': (5, 2),
+    'H': (3, -6),
+    'I': (-4, -3),
+    'J': (-8, -4)
+}
+
+points2 = {
+    'A': (2, 4),
+    'B': (6, 5),
+    'C': (10, 5),
+    'D': (7, 8),
+    'E': (4, 7),
+    'F': (7, 4),
+    'G': (11, 6),
+    'H': (10, 8),
+    'I': (9, 3),
+    'J': (11, 4)
 }
 
 def time_travel(func):
@@ -36,21 +49,21 @@ def distance(point1, point2):
 
 
 # calculate total distance of route
-def total_distance(route):
+def total_distance(route, point_set):
     total = 0
     for i in range(len(route) - 1):
-        if route[i] in points and route[i + 1] in points:
-            total += distance(points[route[i]], points[route[i + 1]])
+        if route[i] in point_set and route[i + 1] in point_set:
+            total += distance(point_set[route[i]], point_set[route[i + 1]])
         else:
             raise ValueError("Invalid route key found.")
     return total
 
 
-def generate_initial_population(population_size):
+def generate_initial_population(population_size, point_set):
     population = []
 
     while len(population) < population_size:
-        route = list(points.keys())
+        route = list(point_set.keys())
         random.shuffle(route)
 
         # check if route already in population
@@ -61,11 +74,11 @@ def generate_initial_population(population_size):
 
 
 route_index = 5
-population = generate_initial_population(10)
+population = generate_initial_population(10, points2)
 selected_route = population[route_index]
 
 print("Selected Route:", selected_route)
-print("Total Distance of Selected Route:", total_distance(selected_route))
+print("Total Distance of Selected Route:", total_distance(selected_route, points2))
 
 
 def swap(arr1, arr2, start, end):
@@ -114,10 +127,10 @@ def mutation(array):
     return mutationList
 
 
-def get_fitness(array):
+def get_fitness(array, point_set):
     fitness = 0
     for i in range(len(array) - 1):
-        fitness += distance(points[array[i]], points[array[i + 1]])
+        fitness += distance(point_set[array[i]], point_set[array[i + 1]])
     return fitness
 
 
@@ -125,7 +138,7 @@ def graph(set, points, fitness):
 
     fig, ax = plt.subplots()
 
-    line, = ax.plot([], [], lw=2)
+    line, = ax.plot([], [], lw=1)
     generation_text = ax.text(0.01, 0.98, '', ha='left', va='top', transform=ax.transAxes, fontsize=8)
     fitness_text = ax.text(0.01, 0.95, '', ha='left', va='top', transform=ax.transAxes, fontsize=8)
 
@@ -133,10 +146,10 @@ def graph(set, points, fitness):
         plt.xlabel("x")
         plt.ylabel("y")
 
-        plt.plot(ax.get_xlim(), [0, 0], 'k--')
-        plt.plot([0, 0], ax.get_ylim(), 'k--')
+        # plt.plot(ax.get_xlim(), [0, 0], 'k--')
+        # plt.plot([0, 0], ax.get_ylim(), 'k--')
 
-        plt.xlim(-13, 13), plt.ylim(-13, 13)
+        # plt.xlim(-12, 12), plt.ylim(-12, 12)
 
         x = [points[i][0] for i in set[0]]
         y = [points[i][1] for i in set[0]]
@@ -165,7 +178,7 @@ def graph(set, points, fitness):
     plt.show()
 
 @time_travel
-def TSP(start, itr):
+def TSP(start, itr, point_set):
     parent1 = math.inf
     parent2 = math.inf
     fitness = []
@@ -173,7 +186,7 @@ def TSP(start, itr):
     all_generations = []
     all_fitness = []
 
-    population = generate_initial_population(2)
+    population = generate_initial_population(2, point_set)
     for i in population:
         i.remove(start)
         i.insert(0, start)
@@ -181,7 +194,7 @@ def TSP(start, itr):
 
     # get fitness of each population
     for i in range(len(population)):
-        heapq.heappush(fitness, (get_fitness(population[i]), i))
+        heapq.heappush(fitness, (get_fitness(population[i], point_set), i))
 
     temp = heapq.heappop(fitness)
     parent1 = (temp[0], population[temp[1]])
@@ -190,12 +203,12 @@ def TSP(start, itr):
 
         while True:
             # if len(fitness) > 0:
-            temp = generate_initial_population(1)[0]
+            temp = generate_initial_population(1, point_set)[0]
             temp.remove(start)
             temp.insert(0, start)
             temp.append(start)
 
-            parent2 = (get_fitness(temp), temp)
+            parent2 = (get_fitness(temp, point_set), temp)
 
             childs = crossover(parent1[1][1:len(parent1[1]) - 1], parent2[1][1:len(parent2[1]) - 1], 2, 6)
 
@@ -204,7 +217,7 @@ def TSP(start, itr):
 
             temp_child = (math.inf, 0)
 
-            while (temp_child[0] >= parent1[0] + 0.5) or (temp_child[0] >= parent2[0] + 0.5):
+            while (temp_child[0] >= parent1[0] + 0.05) or (temp_child[0] >= parent2[0] + 0.05):
                 if len(mutations) <= 0:
                     break
 
@@ -213,7 +226,7 @@ def TSP(start, itr):
                 temp.insert(0, start)
                 temp.append(start)
 
-                temp_child = (get_fitness(temp), temp)
+                temp_child = (get_fitness(temp, point_set), temp)
 
             if len(mutations) <= 0:
                 print(f"Gen #{m} current lowest path:{parent1[0]} ")
@@ -247,5 +260,5 @@ testGene2 = ['A', 'D', 'C', 'B']
 # print(get_fitness(testGene))
 
 #test
-ag, af = TSP('A', 10000)
-graph(ag, points, af)
+ag, af = TSP('A', 5000, points2)
+graph(ag, points2, af)
