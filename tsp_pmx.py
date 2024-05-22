@@ -5,18 +5,6 @@ import time
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-points = {
-    'A': (-8, 6),
-    'B': (-4, 11),
-    'C': (4, 11),
-    'D': (-2, 7),
-    'E': (2, 5),
-    'F': (8, 3),
-    'G': (5, 2),
-    'H': (3, -6),
-    'I': (-4, -3),
-    'J': (-8, -4)
-}
 
 points2 = {
     'A': (2, 4),
@@ -29,29 +17,6 @@ points2 = {
     'H': (10, 8),
     'I': (9, 3),
     'J': (11, 4)
-}
-
-points3 = {
-'A': (2, 4),
-    'B': (6, 5),
-    'C': (10, 5),
-    'D': (7, 8),
-    'E': (4, 7),
-    'F': (7, 4),
-    'G': (11, 6),
-    'H': (10, 8),
-    'I': (9, 3),
-    'J': (11, 4),
-    'K': (5, 1),
-    'L': (3, 2),
-    'M': (1, 7),
-    'N': (8, 9),
-    'O': (12, 3),
-    'P': (14, 6),
-    'Q': (9, 10),
-    'R': (6, 1),
-    'S': (4, 3),
-    'T': (13, 5)
 }
 
 
@@ -139,7 +104,6 @@ def crossover(p1, p2, start, end):
         c1[index1[i]], c2[index2[i]] = c2[index2[i]], c1[index1[i]]
 
     return (c1, c2)
-    print("\n")
 
 
 def mutation(array):
@@ -158,7 +122,7 @@ def get_fitness(array, point_set):
     return fitness
 
 
-def animate_generation(set, points, fitness):
+def animate_generation(set, points, fitness, is_repeat=False):
 
     fig, ax = plt.subplots()
 
@@ -200,7 +164,7 @@ def animate_generation(set, points, fitness):
         return line
 
     anim = FuncAnimation(fig, animate, frames=range(0, len(set), 20),
-                         init_func=init, interval=1, repeat=False)
+                         init_func=init, interval=1, repeat=is_repeat)
 
     plt.show()
 
@@ -254,7 +218,7 @@ def TSP(start, itr, point_set):
 
             temp_child = (math.inf, 0)
 
-            while (temp_child[0] >= parent1[0]) or (temp_child[0] >= parent2[0]):
+            while (temp_child[0] >= parent1[0] + 0.05) or (temp_child[0] >= parent2[0] + 0.05):
                 if len(mutations) <= 0:
                     break
 
@@ -318,7 +282,7 @@ def TSP_2(start, itr, point_set):
 
             temp_child = (math.inf, 0)
 
-            while (temp_child[0] >= parent1[0]) or (temp_child[0] >= parent2[0]):
+            while (temp_child[0] >= parent1[0] + 2) or (temp_child[0] >= parent2[0] + 2):
                 if len(mutations) <= 0:
                     break
 
@@ -358,6 +322,6 @@ testGene2 = ['A', 'D', 'C', 'B']
 # print(get_fitness(testGene))
 
 # test
-ag, af = TSP_2('A', 5001, points2)
-animate_generation(ag, points2, af)
+ag, af = TSP('A', 5001, points2)
+animate_generation(ag, points2, af, False)
 graph_generations(af)
