@@ -1,3 +1,3 @@
-# P-AI-NOY HENYO 
+# BSCS 3-1N Group 1 Repository (Introduction to Artificial Intelligence)
 
-An intelligent agent that guesses the word inputted by the user using Genetic Algorithm.
+This repository includes different projects regarding artificial intelligence.
