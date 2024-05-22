@@ -1,3 +1,5 @@
+import os
+
 # GameMaster class
 class GameMaster:
     def __init__(self, target_word) -> None:
@@ -36,6 +38,11 @@ class BotGuesser:
 
 # Main function (The Game Loop itself)
 def mainFunc():
+    os.system('cls')
+
+    # Title Screen
+    titleScreen()
+
     # Get input word
     input_word = input("Enter the magic word\t: ")
     gm = GameMaster(input_word)
@@ -47,5 +54,15 @@ def mainFunc():
         print(guesser.word_len)
         break
 
+def titleScreen():
+    print("\n    /$$$$$$$          /$$$$$$  /$$$$$$       /$$   /$$  /$$$$$$  /$$     /$$       /$$   /$$ /$$$$$$$$ /$$   /$$ /$$     /$$ /$$$$$$ ")
+    print("   | $$__  $$        /$$__  $$|_  $$_/      | $$$ | $$ /$$__  $$|  $$   /$$/      | $$  | $$| $$_____/| $$$ | $$|  $$   /$$//$$__  $$")
+    print("   | $$  \ $$       | $$  \ $$  | $$        | $$$$| $$| $$  \ $$ \  $$ /$$/       | $$  | $$| $$      | $$$$| $$ \  $$ /$$/| $$  \ $$")
+    print("   | $$$$$$$//$$$$$$| $$$$$$$$  | $$ /$$$$$$| $$ $$ $$| $$  | $$  \  $$$$/        | $$$$$$$$| $$$$$   | $$ $$ $$  \  $$$$/ | $$  | $$")
+    print("   | $$____/|______/| $$__  $$  | $$|______/| $$  $$$$| $$  | $$   \  $$/         | $$__  $$| $$__/   | $$  $$$$   \  $$/  | $$  | $$")
+    print("   | $$             | $$  | $$  | $$        | $$\  $$$| $$  | $$    | $$          | $$  | $$| $$      | $$\  $$$    | $$   | $$  | $$")
+    print("   | $$             | $$  | $$ /$$$$$$      | $$ \  $$|  $$$$$$/    | $$          | $$  | $$| $$$$$$$$| $$ \  $$    | $$   |  $$$$$$/")
+    print("   |__/             |__/  |__/|______/      |__/  \__/ \______/     |__/          |__/  |__/|________/|__/  \__/    |__/    \______/ \n\n")
+    
 if __name__ == "__main__":
     mainFunc()
