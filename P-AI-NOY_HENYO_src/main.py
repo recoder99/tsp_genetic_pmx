@@ -16,7 +16,7 @@ class GameMaster:
         ALPHABET = "abcdefghijklmnopqrstuvwxyz"
         guess_cost = []
 
-        # for loop that iterates through each character in a word to calculate each cost
+        # for loop that iterates through each character in a word to calculate each cost and append to guess_cost
         for i in range(self.target_len):
             char_cost = (ALPHABET.index(self.target_word[i].lower()) - ALPHABET.index(guess_word[i].lower()))**2
             guess_cost.append(char_cost)
