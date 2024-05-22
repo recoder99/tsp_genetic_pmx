@@ -4,14 +4,22 @@ import os
 class GameMaster:
     def __init__(self, target_word) -> None:
         self.target_word = target_word
+        self.target_len = None
     
     # passes the length of the word provided by the user
     def passLen(self):
-        return len(self.target_word)
+        self.target_len = len(self.target_word)
+        return self.target_len
 
     # calculates the cost values of the provided word
-    def calculateCost(self):
-        pass
+    def calculateCost(self, guess_word):
+        ALPHABET = "abcdefghijklmnopqrstuvwxyz"
+        guess_cost = []
+
+        # for loop that iterates through each character in a word to calculate each cost
+        for i in range(self.target_len):
+            char_cost = (ALPHABET.index(self.target_word[i].lower()) - ALPHABET.index(guess_word[i].lower()))**2
+            guess_cost.append(char_cost)
 
 # GuesserAgent
 class BotGuesser:
