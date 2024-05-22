@@ -1,10 +1,10 @@
 import os
-
+from Guesser import Guesser
 # GameMaster class
 class GameMaster:
-    def __init__(self, target_word) -> None:
+    def __init__(self, target_word):
         self.target_word = target_word
-        self.target_len = None
+        self.target_len = len(self.target_word)
     
     # passes the length of the word provided by the user
     def passLen(self):
@@ -15,11 +15,17 @@ class GameMaster:
     def calculateCost(self, guess_word):
         ALPHABET = "abcdefghijklmnopqrstuvwxyz"
         guess_cost = []
+        x = 0
 
         # for loop that iterates through each character in a word to calculate each cost and append to guess_cost
         for i in range(self.target_len):
             char_cost = (ALPHABET.index(self.target_word[i].lower()) - ALPHABET.index(guess_word[i].lower()))**2
             guess_cost.append(char_cost)
+        
+        for i in guess_cost:
+            x += i
+
+        return x
 
 # GuesserAgent
 class BotGuesser:
@@ -54,13 +60,17 @@ def mainFunc():
     # Get input word
     input_word = input("Enter the magic word\t: ")
     gm = GameMaster(input_word)
-    guesser = BotGuesser(gm.passLen())
+    guesser = Guesser(len(input_word))
+
+    guess_word = guesser.get_initial_guess()
+    print(guess_word)
 
     is_guessing = True
 
-    while is_guessing:
-        print(guesser.word_len)
-        break
+    while guess_word != input_word:
+        guess_word = guesser.eval_gene(guess_word, gm.calculateCost(guess_word))
+    
+    print(f"Word \"{gm.target_word}\" is successfully guessed!!")
 
 def titleScreen():
     print("\n    /$$$$$$$          /$$$$$$  /$$$$$$       /$$   /$$  /$$$$$$  /$$     /$$       /$$   /$$ /$$$$$$$$ /$$   /$$ /$$     /$$ /$$$$$$ ")
