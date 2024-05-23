@@ -14,11 +14,11 @@ class Guesser:
     parent2 = (math.inf, "")
 
     num = 0
-    swap_start = 0.10
-    swap_end = 0.90
+    swap_start = 0.40
+    swap_end = 0.80
 
-    crossover_start = 0
-    crossover_end = 0.60
+    crossover_start = 0.3
+    crossover_end = 0.70
 
     def __init__(self, word_len) -> None:
         self.num = word_len
@@ -82,6 +82,7 @@ class Guesser:
 
         if mode == 'p':
             new_mutates = self.discard_old_mutation_python(current_mutate)
+            print(new_mutates)
             return new_mutates
         elif mode == 'n':
             new_mutates = self.discard_old_mutation_numpy(current_mutate)
@@ -105,14 +106,14 @@ class Guesser:
         return str_to_char
 
     def discard_old_mutation_python(self, array: list):
-        unique = [x for x in array if x not in self.mutate_history]
+        no_duplicate = list(set(array))
+        unique = [x for x in no_duplicate if x not in self.mutate_history]
 
         self.mutate_history.extend(unique)
 
         str_to_char = list(map(list, unique))  # convert to 2d list of chars
 
         return str_to_char
-
 
     def get_initial_guess(self):
         init_guess = "".join(self.mutation_list.pop())
@@ -134,6 +135,7 @@ class Guesser:
                 if temp[0] < self.parent1[0]: #if the elite child is better than parent 1
                     self.parent1 = temp
                     self.parent2 = heappop(self.heap) # get the second elite child as parent2
+
                 else:
                     self.parent2 = temp # replace the parent2 with elite child
                 # # set the child with the lowest cost as parent1
@@ -146,7 +148,7 @@ class Guesser:
                     len(temp) * self.swap_start), math.floor(len(temp) * self.swap_end)) + [child[0]] + [child[1]]
 
                 self.curr_generation += 1
-                print(f"Generation {self.curr_generation}: {self.parent1[1]} Cost: {self.parent1[0]}")
+                # print(f"Generation {self.curr_generation}: {self.parent1[1]} Cost: {self.parent1[0]}")
                 self.append_history(self.curr_generation, self.parent1[1], self.parent1[0])
             else:  # if there are no child better than original parent
                 temp = self.gen_population(self.num, 1)
