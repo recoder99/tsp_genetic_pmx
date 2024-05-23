@@ -1,10 +1,12 @@
 import math
 import random
+import numpy as np
 from heapq import *
 
 
 class Guesser:
     mutation_list = []
+    mutate_history = []
 
     heap = []
 
@@ -12,8 +14,8 @@ class Guesser:
     parent2 = (math.inf, "")
 
     num = 0
-    swap_start = 0.20
-    swap_end = 0.70
+    swap_start = 0.10
+    swap_end = 0.90
 
     crossover_start = 0
     crossover_end = 0.60
@@ -60,9 +62,11 @@ class Guesser:
     #             mutationList.append(array)
     #     return mutationList
 
-    def mutate(self, array: list, start, end):
+    def mutate(self, array: list, start, end, mode='a'):
         x = []
+        current_mutate = []
         temp = 0
+
         for i in range(30):
             # temp = array
             # random.shuffle(temp[start:end])
@@ -71,8 +75,44 @@ class Guesser:
             for i in range(start,end):
                 val = random.randrange(i, end)
                 temp[i], temp[val] = temp[val], temp[i]
+
+            joins = "".join(temp)   # join char arrays into one string
             x.append(temp)
-        return x
+            current_mutate.append(joins)
+
+        if mode == 'p':
+            new_mutates = self.discard_old_mutation_python(current_mutate)
+            return new_mutates
+        elif mode == 'n':
+            new_mutates = self.discard_old_mutation_numpy(current_mutate)
+            return new_mutates
+        else:
+            return x
+
+    def discard_old_mutation_numpy(self, array: list):
+        unique_array = set(array)   # remove duplicates
+        np_arr = np.array(list(unique_array))   # convert to np array
+
+        # print('hist', self.mutate_history)
+        np_mutation_hist = np.array(self.mutate_history)     # convert history to np array
+
+        unique = np_arr[~np.in1d(np_arr, np_mutation_hist)]     # remove from np_arr members found in history
+
+        self.mutate_history.extend(unique.tolist())     # convert unique to list and append to history
+
+        str_to_char = list(map(list, unique.tolist()))   # convert to 2d list of chars
+
+        return str_to_char
+
+    def discard_old_mutation_python(self, array: list):
+        unique = [x for x in array if x not in self.mutate_history]
+
+        self.mutate_history.extend(unique)
+
+        str_to_char = list(map(list, unique))  # convert to 2d list of chars
+
+        return str_to_char
+
 
     def get_initial_guess(self):
         init_guess = "".join(self.mutation_list.pop())
@@ -94,8 +134,6 @@ class Guesser:
                 if temp[0] < self.parent1[0]: #if the elite child is better than parent 1
                     self.parent1 = temp
                     self.parent2 = heappop(self.heap) # get the second elite child as parent2
-                    self.curr_generation += 1
-                    print(f"Generation {self.curr_generation}: {self.parent1[1]} Cost: {self.parent1[0]}")
                 else:
                     self.parent2 = temp # replace the parent2 with elite child
                 # # set the child with the lowest cost as parent1
@@ -106,6 +144,9 @@ class Guesser:
                 self.mutation_list = self.mutate(child[0], math.floor(len(temp) * self.swap_start),
                                                  math.floor(len(temp) * self.swap_end)) + self.mutate(child[1], math.floor(
                     len(temp) * self.swap_start), math.floor(len(temp) * self.swap_end)) + [child[0]] + [child[1]]
+
+                self.curr_generation += 1
+                print(f"Generation {self.curr_generation}: {self.parent1[1]} Cost: {self.parent1[0]}")
                 self.append_history(self.curr_generation, self.parent1[1], self.parent1[0])
             else:  # if there are no child better than original parent
                 temp = self.gen_population(self.num, 1)
