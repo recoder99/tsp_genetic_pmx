@@ -12,7 +12,7 @@ class Guesser:
     parent2 = (math.inf, "")
 
     num = 0
-    swap_start = 0.30
+    swap_start = 0.20
     swap_end = 0.70
 
     crossover_start = 0
@@ -89,13 +89,16 @@ class Guesser:
             return pops
         else:  # if mutations are depleted
             temp = heappop(self.heap)
-            if temp[0] < self.parent2[0] and temp[0] < self.parent1[0]:  # if there is a child better than original parent
-                self.curr_generation += 1
-                # set the child with the lowest cost as parent1
-                self.parent1 = temp
-                # set the child with the second lowest cost as parent2
-                self.parent2 = heappop(self.heap)
+            if temp[0] < self.parent2[0]:  # if the elite child better than parent 2
 
+                if temp[0] < self.parent1[0]: #if the elite child is better than parent 1
+                    self.parent1 = temp
+                    self.parent2 = heappop(self.heap) # get the second elite child as parent2
+                    self.curr_generation += 1
+                    print(f"Generation {self.curr_generation}: {self.parent1[1]} Cost: {self.parent1[0]}")
+                else:
+                    self.parent2 = temp # replace the parent2 with elite child
+                # # set the child with the lowest cost as parent1
                 temp = [*self.parent1[1]]
                 temp2 = [*self.parent2[1]]
 
@@ -103,7 +106,6 @@ class Guesser:
                 self.mutation_list = self.mutate(child[0], math.floor(len(temp) * self.swap_start),
                                                  math.floor(len(temp) * self.swap_end)) + self.mutate(child[1], math.floor(
                     len(temp) * self.swap_start), math.floor(len(temp) * self.swap_end)) + [child[0]] + [child[1]]
-                print(f"Generation {self.curr_generation}: {self.parent1[1]} Cost: {self.parent1[0]}")
                 self.append_history(self.curr_generation, self.parent1[1], self.parent1[0])
             else:  # if there are no child better than original parent
                 temp = self.gen_population(self.num, 1)
