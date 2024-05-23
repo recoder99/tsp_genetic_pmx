@@ -30,7 +30,7 @@ class GameMaster:
 
     # calculates the cost values of the provided word
     def calculateCost(self, guess_word):
-        ALPHABET = "abcdefghijklmnopqrstuvwxyz"
+        ALPHABET = "abcdefghijklmnopqrstuvwxyz "
         guess_cost = []
         x = 0
 
@@ -84,15 +84,15 @@ def mainFunc():
     guess_word = guesser.get_initial_guess()
     guesser.append_history(0, guess_word, gm.calculateCost(guess_word))
     # print(guess_word)
-    print('hold on, he\'s thinking')
+    # print('hold on, he\'s thinking')
 
-    while guess_word.lower() != input_word.lower() and guesser.curr_generation < 5000:
+    while gm.calculateCost(guess_word) != 0 and guesser.curr_generation < 5000:
         guess_word = guesser.eval_gene(guess_word, gm.calculateCost(guess_word))
 
     guesser.append_history(guesser.curr_generation + 1, guess_word, gm.calculateCost(guess_word))
 
-    if guess_word.lower() == input_word.lower():
-        print(f"Word \"{gm.target_word}\" is successfully guessed in {guesser.curr_generation} guesses!!")
+    if gm.calculateCost(guess_word) == 0:
+        print(f"Word \"{gm.target_word}\" is successfully guessed in {guesser.curr_generation + 1} guesses!!")
     else:
         print(f"Word \"{gm.target_word}\" was failed to be guessed!! Last guess was '{guess_word}' with cost {gm.calculateCost(guess_word)}")
 

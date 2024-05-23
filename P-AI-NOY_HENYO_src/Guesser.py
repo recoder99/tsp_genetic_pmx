@@ -18,9 +18,14 @@ class Guesser:
     swap_end = 0.80
 
     crossover_start = 0.3
-    crossover_end = 0.70
+    crossover_end = 0.8
 
     def __init__(self, word_len) -> None:
+        self.swap_start = 0.40
+        self.swap_end = 0.80
+
+        self.crossover_start = 0.3
+        self.crossover_end = 0.70
         self.num = word_len
         self.curr_generation = 0
         self.guess_history = []
@@ -76,9 +81,9 @@ class Guesser:
                 val = random.randrange(i, end)
                 temp[i], temp[val] = temp[val], temp[i]
 
-            joins = "".join(temp)   # join char arrays into one string
+            # joins = "".join(temp)   # join char arrays into one string
             x.append(temp)
-            current_mutate.append(joins)
+            # current_mutate.append(joins)
 
         if mode == 'p':
             new_mutates = self.discard_old_mutation_python(current_mutate)
@@ -148,7 +153,7 @@ class Guesser:
                     len(temp) * self.swap_start), math.floor(len(temp) * self.swap_end)) + [child[0]] + [child[1]]
 
                 self.curr_generation += 1
-                # print(f"Generation {self.curr_generation}: {self.parent1[1]} Cost: {self.parent1[0]}")
+                print(f"Generation {self.curr_generation}: {self.parent1[1]} Cost: {self.parent1[0]}")
                 self.append_history(self.curr_generation, self.parent1[1], self.parent1[0])
             else:  # if there are no child better than original parent
                 temp = self.gen_population(self.num, 1)

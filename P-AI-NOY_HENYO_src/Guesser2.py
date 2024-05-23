@@ -13,9 +13,9 @@ class Guesser:
         self.parent2 = (math.inf, "")
         self.swap_start = 0.20
         self.swap_end = 0.70
-        self.crossover_start = 0
-        self.crossover_end = 0.60
-        self.mutation_rate = 0.1
+        # self.crossover_start = 0
+        # self.crossover_end = 0.60
+        # self.mutation_rate = 0.6
         x = self.gen_population(self.num, 10)
         for i in x:
             self.mutation_list.append([*i])
@@ -23,7 +23,7 @@ class Guesser:
     def gen_population(self, num, itr):
         templist = []
         temp = ""
-        alphabet = "abcdefghijklmnopqrstuvwxyz"
+        alphabet = "abcdefghijklmnopqrstuvwxyz "
         for _ in range(itr):
             for _ in range(num):
                 temp += alphabet[random.randrange(0, len(alphabet))]
@@ -45,10 +45,10 @@ class Guesser:
         x = []
         for _ in range(30):
             temp = list(array)
-            if random.random() < self.mutation_rate:
-                for i in range(start, end):
-                    val = random.randrange(i, end)
-                    temp[i], temp[val] = temp[val], temp[i]
+            # if random.random() < self.mutation_rate:
+            for i in range(start, end):
+                val = random.randrange(i, end)
+                temp[i], temp[val] = temp[val], temp[i]
             x.append(temp)
         return x
 
@@ -76,10 +76,8 @@ class Guesser:
                 temp2 = [*self.parent2[1]]
                 child = self.crossover(temp, temp2, random.randint(0, len(temp) - 1), random.randint(0, len(temp) - 1))
                 self.mutation_list = self.mutate(child[0], math.floor(len(temp) * self.swap_start),
-                                                 math.floor(len(temp) * self.swap_end)) + \
-                                     self.mutate(child[1], math.floor(len(temp) * self.swap_start),
-                                                 math.floor(len(temp) * self.swap_end)) + \
-                                     [child[0]] + [child[1]]
+                                                 math.floor(len(temp) * self.swap_end)) + self.mutate(child[1], math.floor(len(temp) * self.swap_start),
+                                                 math.floor(len(temp) * self.swap_end)) + [child[0]] + [child[1]]
 
                 self.curr_generation += 1
                 print(f"Generation {self.curr_generation}: {self.parent1[1]} Cost: {self.parent1[0]}")
