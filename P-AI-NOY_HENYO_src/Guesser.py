@@ -15,6 +15,9 @@ class Guesser:
     swap_start = 0.30
     swap_end = 0.70
 
+    crossover_start = 0
+    crossover_end = 0.60
+
     def __init__(self, word_len) -> None:
         self.num = word_len
         self.curr_generation = 0
@@ -96,7 +99,7 @@ class Guesser:
                 temp = [*self.parent1[1]]
                 temp2 = [*self.parent2[1]]
 
-                child = self.crossover(temp, temp2, math.floor(len(temp) * 0.30), math.floor(len(temp) * 0.60))
+                child = self.crossover(temp, temp2, math.floor(len(temp) * self.crossover_start), math.floor(len(temp) * self.crossover_end))
                 self.mutation_list = self.mutate(child[0], math.floor(len(temp) * self.swap_start),
                                                  math.floor(len(temp) * self.swap_end)) + self.mutate(child[1], math.floor(
                     len(temp) * self.swap_start), math.floor(len(temp) * self.swap_end)) + [child[0]] + [child[1]]
@@ -109,7 +112,7 @@ class Guesser:
                 temp = [*self.parent1[1]]
                 temp2 = [*self.parent2[1]]
 
-                child = self.crossover(temp, temp2, math.floor(len(temp) * 0.30), math.floor(len(temp) * 0.80))
+                child = self.crossover(temp, temp2, math.floor(len(temp) * self.crossover_start), math.floor(len(temp) * self.crossover_end))
                 self.mutation_list = self.mutate(child[0], math.floor(len(temp) * self.swap_start),
                                                  math.floor(len(temp) * self.swap_end)) + self.mutate(child[1], math.floor(
                     len(temp) * self.swap_start), math.floor(len(temp) * self.swap_end)) + [child[0]] + [child[1]]
