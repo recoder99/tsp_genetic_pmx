@@ -12,6 +12,8 @@ class Guesser:
     parent2 = (math.inf, "")
 
     num = 0
+    swap_start = 0.30
+    swap_end = 0.70
 
     def __init__(self, word_len) -> None:
         self.num = word_len
@@ -57,9 +59,15 @@ class Guesser:
 
     def mutate(self, array: list, start, end):
         x = []
-        for i in range(20):
-            temp = array
-            random.shuffle(temp[start:end])
+        temp = 0
+        for i in range(30):
+            # temp = array
+            # random.shuffle(temp[start:end])
+            # x.append(temp)
+            temp = list(array)
+            for i in range(start,end):
+                val = random.randrange(i, end)
+                temp[i], temp[val] = temp[val], temp[i]
             x.append(temp)
         return x
 
@@ -89,9 +97,9 @@ class Guesser:
                 temp2 = [*self.parent2[1]]
 
                 child = self.crossover(temp, temp2, math.floor(len(temp) * 0.30), math.floor(len(temp) * 0.60))
-                self.mutation_list = self.mutate(child[0], math.floor(len(temp) * 0.30),
-                                                 math.floor(len(temp) * 0.60)) + self.mutate(child[1], math.floor(
-                    len(temp) * 0.30), math.floor(len(temp) * 0.60)) + [child[0]] + [child[1]]
+                self.mutation_list = self.mutate(child[0], math.floor(len(temp) * self.swap_start),
+                                                 math.floor(len(temp) * self.swap_end)) + self.mutate(child[1], math.floor(
+                    len(temp) * self.swap_start), math.floor(len(temp) * self.swap_end)) + [child[0]] + [child[1]]
                 print(f"Generation {self.curr_generation}: {self.parent1[1]} Cost: {self.parent1[0]}")
                 self.append_history(self.curr_generation, self.parent1[1], self.parent1[0])
             else:  # if there are no child better than original parent
@@ -101,10 +109,10 @@ class Guesser:
                 temp = [*self.parent1[1]]
                 temp2 = [*self.parent2[1]]
 
-                child = self.crossover(temp, temp2, math.floor(len(temp) * 0.30), math.floor(len(temp) * 0.60))
-                self.mutation_list = self.mutate(child[0], math.floor(len(temp) * 0.30),
-                                                 math.floor(len(temp) * 0.60)) + self.mutate(child[1], math.floor(
-                    len(temp) * 0.30), math.floor(len(temp) * 0.60)) + [child[0]] + [child[1]]
+                child = self.crossover(temp, temp2, math.floor(len(temp) * 0.30), math.floor(len(temp) * 0.80))
+                self.mutation_list = self.mutate(child[0], math.floor(len(temp) * self.swap_start),
+                                                 math.floor(len(temp) * self.swap_end)) + self.mutate(child[1], math.floor(
+                    len(temp) * self.swap_start), math.floor(len(temp) * self.swap_end)) + [child[0]] + [child[1]]
 
             return "".join(self.mutation_list.pop())
 
