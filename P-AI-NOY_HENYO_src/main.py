@@ -1,4 +1,5 @@
 import os
+import matplotlib.pyplot as plt
 from Guesser import Guesser
 # GameMaster class
 class GameMaster:
@@ -73,10 +74,16 @@ def mainFunc():
 
     guesser.append_history(guesser.curr_generation + 1, guess_word, gm.calculateCost(guess_word))
 
-    history = guesser.guess_history
-    print(history)
+    costs = [item[2] for item in guesser.guess_history]
+    gen = list(range(1, len(costs) + 1))
 
-    
+    plt.plot(gen, costs, marker='o')
+    plt.xlabel('Generation')
+    plt.ylabel('Cost')
+    plt.title('Cost vs Generation')
+    plt.grid(True)
+    plt.show()
+
     print(f"Word \"{gm.target_word}\" is successfully guessed!!")
 
 def titleScreen():
