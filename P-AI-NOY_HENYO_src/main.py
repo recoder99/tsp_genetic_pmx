@@ -63,12 +63,19 @@ def mainFunc():
     guesser = Guesser(len(input_word))
 
     guess_word = guesser.get_initial_guess()
+    guesser.append_history(0, guess_word, gm.calculateCost(guess_word))
     print(guess_word)
 
     is_guessing = True
 
-    while guess_word != input_word:
+    while guess_word.lower() != input_word.lower():
         guess_word = guesser.eval_gene(guess_word, gm.calculateCost(guess_word))
+
+    guesser.append_history(guesser.curr_generation + 1, guess_word, gm.calculateCost(guess_word))
+
+    history = guesser.guess_history
+    print(history)
+
     
     print(f"Word \"{gm.target_word}\" is successfully guessed!!")
 
