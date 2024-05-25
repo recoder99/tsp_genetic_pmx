@@ -1,0 +1,14 @@
+Chromosome Encoding
+- String of lowercase letters from the alphabet
+
+Parent Selection Technique
+- Tournament Selection
+  
+Crossover Technique
+- Single-point Crossover
+
+Mutation Technique
+- Random Mutation
+
+Stopping Technique
+- After 5000 generations or when the cost is zero
