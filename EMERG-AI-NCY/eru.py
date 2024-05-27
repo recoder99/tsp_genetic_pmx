@@ -12,7 +12,7 @@ mutation_rate = 0.2
 convergence_threshold = 1e-6
 max_no_improvement_generations = 100
 
-#fitness
+# calculate fitness
 
 def fitness(population, emergency_frequency): 
 
@@ -137,6 +137,51 @@ def genetic_algorithm():
         response_times_list.append(best_response_time)
 
         print(f"Generation {generation + 1}, Best Coordinate: {coordinates_list[-1]}, Cost Value: {current_best_fitness:.2f}, Response Time {best_response_time:.2f} minutes.")
+    # Plot the emergency frequency grid
+    plt.figure(figsize=(6, 6))
+    plt.imshow(emergency_frequency, cmap='RdYlBu', interpolation='nearest', vmin=0, vmax=10)
+    plt.colorbar(label='Emergency Frequency')
+    plt.title('Emergency Frequency Grid')
+    plt.xlabel('X')
+    plt.ylabel('Y')
+    plt.grid(visible=False)
+
+    # Highlight the chosen location for the emergency response unit
+    plt.scatter(coordinates_list[-1][0], coordinates_list[-1][1], color='white', marker='x', s=100)
+    plt.legend()
+    plt.show()
+
+    # Plot the results
+    fig, axs = plt.subplots(3, 1, figsize=(10, 15))
+
+    # Plot the cost values
+    axs[0].plot(generations_list, cost_values_list, label='Cost Value', color='blue')
+    axs[0].set_title('Cost Value over Generations')
+    axs[0].set_xlabel('Generation')
+    axs[0].set_ylabel('Cost Value')
+    axs[0].legend()
+
+    # Plot the response times
+    axs[1].plot(generations_list, response_times_list, label='Response Time (minutes)', color='green')
+    axs[1].set_title('Response Time over Generations')
+    axs[1].set_xlabel('Generation')
+    axs[1].set_ylabel('Response Time (minutes)')
+    axs[1].legend()
+
+    # Plot the coordinates of the best solution
+    x_coords = [coord[0] for coord in coordinates_list]
+    y_coords = [coord[1] for coord in coordinates_list]
+    axs[2].plot(generations_list, x_coords, label='X Coordinate', color='red')
+    axs[2].plot(generations_list, y_coords, label='Y Coordinate', color='purple')
+    axs[2].set_title('Coordinates of Best Solution over Generations')
+    axs[2].set_xlabel('Generation')
+    axs[2].set_ylabel('Coordinate Value')
+
+
+    plt.tight_layout()
+    plt.show()
+
+    
 
 if __name__ == "__main__":
     genetic_algorithm()
