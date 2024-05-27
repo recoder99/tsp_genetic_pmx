@@ -1,5 +1,7 @@
 import math
 import random
+import matplotlib.pyplot as plt 
+
 
 global MAX_COL, MAX_ROW, EMERGENCY_MAP
 MAX_COL = 10
