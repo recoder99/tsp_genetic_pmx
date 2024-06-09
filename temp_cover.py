@@ -1,3 +1,9 @@
+import numpy as np
+import math
+import matplotlib.pyplot as plt
+
+###########################################################################
+
 def temp(temp: int):
     f = temp_freezing(temp)
     c = temp_cool(temp)
@@ -92,8 +98,71 @@ def cover_overcast(cloud: int):
         return -1
 
 ###########################################################################
+    
+def getSpeed(fast, slow):
+    f = fast
+    s = slow
+
+    fY = ((f - -0.5) / 0.02)
+    sY = ((s - -0.5) / 0.02)
+
+    fY = math.ceil(fY)
+    sY = math.ceil(sY)
+
+    y = np.zeros(101)
+
+    print(y)
+
+    y[:math.ceil(sY)] = s
+    y[math.ceil(fY):] = f
+
+    steps = fY - sY
+    delta_y = f - s
+    step_size = delta_y / steps
+
+    for i in range(sY, fY):
+        y[i] = s + (i - sY) * step_size
+
+    sumY = 0.00
+    sumXY = 0.00
+
+    x_values = []
+    y_values = []
+
+    for i in range(101):
+        x_values.append(i)
+        y_values.append(y[i])
+        sumXY = sumXY + (i * y[i])
+        sumY = sumY + y[i]
+
+    plt.plot(x_values, y_values)
+    plt.xlabel('X values')
+    plt.ylabel('Y values')
+    plt.title('Y values over X')
+    plt.show()
+
+    return sumXY / sumY
+
+###########################################################################
 
 if __name__ == '__main__':
-    w = temp(62)
-    c = cover(47)
-    print(f'Temperature: {w} \nCloud Cover: {c}')
+    t = int(input())
+    c = int(input())
+
+    tR = temp(t)
+    cR = cover(c)
+
+    print(f'Temperature-------------------\nFreezing: {tR[0]} || Cool: {tR[1]} || Warm: {tR[2]} || Hot: {tR[3]}')
+    print(f'Cloud Cover-------------------\nSunny: {cR[0]} || Partly Cloudy: {cR[1]} || Overcast: {cR[2]}')
+
+    fast = min(tR[2], cR[0])
+    slow = min(tR[1], cR[1])
+
+    speed = getSpeed(fast, slow)
+
+    print("Output-------------------")
+    print("Fast: ", fast)
+    print("Slow: ", slow) 
+    print("Speed: ", speed)
+
+###########################################################################
