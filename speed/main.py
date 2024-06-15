@@ -85,9 +85,9 @@ def COG(t, c):
     plt.axhline(y=slow, color='g', linestyle='--', label=f'Slow: {slow}')
     plt.axhline(y=fast, color='y', linestyle='--', label=f'Fast: {fast}')
     plt.title("Fuzzy Logic Speed Control Graph")
-    plt.xlabel("X values")
-    plt.ylabel("Y values")
-    plt.ylim(0, 1)  
+    plt.xlabel("Speed Value")
+    plt.ylabel("Y Values")
+    
     plt.yticks([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1])  
     plt.grid(True)
     plt.legend()
